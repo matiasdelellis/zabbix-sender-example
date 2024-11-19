@@ -1,0 +1,64 @@
+zabbix_export:
+  version: '7.0'
+  template_groups:
+    - uuid: a5d12173dac54246846cbbace6c01601
+      name: 'Templates/Sender Examples'
+  templates:
+    - uuid: ac172079be5b45dda6015928e704320a
+      template: 'Sender Example Template'
+      name: 'Sender Example Template'
+      groups:
+        - name: 'Templates/Sender Examples'
+      items:
+        - uuid: 327a2397212c492da7d7822f5b469eac
+          name: 'Disk Path (Sender Example)'
+          type: TRAP
+          key: example.disk_path
+          delay: '0'
+          value_type: TEXT
+          trends: '0'
+          tags:
+            - tag: component
+              value: example
+        - uuid: e1af8e5b1c784b2f8846bc7fb7262d94
+          name: 'Disk Free Space Available (Sender Example)'
+          type: TRAP
+          key: example.disk_space_available
+          delay: '0'
+          value_type: FLOAT
+          trends: '0'
+          units: '%'
+          tags:
+            - tag: component
+              value: example
+          triggers:
+            - uuid: 3446d793defe42aba36f04088879cccd
+              expression: 'last(/Sender Example Template/example.disk_space_available)<=10.0'
+              recovery_mode: RECOVERY_EXPRESSION
+              recovery_expression: 'last(/Sender Example Template/example.disk_space_available)>10.0'
+              name: 'Low disk space available (Sender Example)'
+              priority: AVERAGE
+              description: 'It is considered a problem if the available space is less than 10%'
+              manual_close: 'YES'
+        - uuid: 57f7e457700542db89f4c8a914e4a646
+          name: 'Hostname (Sender Example)'
+          type: TRAP
+          key: example.hostname
+          delay: '0'
+          value_type: TEXT
+          trends: '0'
+          tags:
+            - tag: component
+              value: example
+      tags:
+        - tag: class
+          value: example
+  graphs:
+    - uuid: c66de203b42f4394900000f9d639e418
+      name: 'Disk Free Space Available (Sender Example)'
+      graph_items:
+        - color: 1A7C11
+          calc_fnc: ALL
+          item:
+            host: 'Sender Example Template'
+            key: example.disk_space_available
